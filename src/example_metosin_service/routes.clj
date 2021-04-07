@@ -11,7 +11,7 @@
   [""
    [["/" ::discovery]
     ["/ping" ::ping]
-    #_[true :no-route]]])
+    [true :no-route]]])
 
 (def handlers
   {::discovery {:get {:handler (fn handler [request]
@@ -22,4 +22,12 @@
                                              {:self      (hype/absolute-url-for request routes ::discovery)
                                               :discovery (hype/absolute-url-for request routes ::discovery)
                                               :ping      (hype/absolute-url-for request routes ::ping)})
-                                           (hal-json/resource->map))))}}})
+                                           (hal-json/resource->map))))}}
+   ::ping {:get {:handler (fn handler [request]
+                            (assoc successful-get-defaults
+                              :body (->
+                                      (hal/new-resource)
+                                      (hal/add-links
+                                        {:self      (hype/absolute-url-for request routes ::ping)
+                                         :discovery (hype/absolute-url-for request routes ::discovery)})
+                                      (hal-json/resource->map))))}}})

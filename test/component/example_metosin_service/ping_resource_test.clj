@@ -1,4 +1,4 @@
-(ns example-metosin-service.discovery-resource-test
+(ns example-metosin-service.ping-resource-test
   (:require
    [clojure.test :refer :all]
    [clojure.string :refer [ends-with?]]
@@ -14,8 +14,8 @@
       configuration (test-system-configuration)]
   (use-fixtures :once (with-system-lifecycle test-system configuration))
 
-  (deftest discovery-resource-GET-on-success
-    (let [base-url (str (:address configuration) "/")
+  (deftest ping-resource-GET-on-success
+    (let [base-url (str (:address configuration) "/ping")
           result (navigator/discover base-url)
           resource (navigator/resource result)]
       (testing "returns status code 200"
@@ -24,14 +24,9 @@
       (testing "includes a self link"
         (let [self-link (hal/get-href resource :self)]
           (is (absolute? self-link))
-          (is (ends-with? self-link "/"))))
+          (is (ends-with? self-link "/ping"))))
 
       (testing "includes a link to discovery"
         (let [discovery-link (hal/get-href resource :discovery)]
           (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/"))))
-
-      (testing "includes a link to discovery"
-        (let [discovery-link (hal/get-href resource :ping)]
-          (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/ping")))))))
+          (is (ends-with? discovery-link "/")))))))

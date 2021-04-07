@@ -1,6 +1,7 @@
 (ns example-metosin-service.server
   (:require
    [aleph.http :as http]
+   [camel-snake-kebab.core :as csk]
    [muuntaja.core :as m]
    [reitit.core :as reitit]
    [reitit.ring :as ring]
@@ -23,7 +24,11 @@
                          muuntaja-middleware/format-negotiate-middleware
                          muuntaja-middleware/format-response-middleware
                          muuntaja-middleware/format-request-middleware]
-            :muuntaja   m/instance}
+            :muuntaja   (-> m/default-options
+                          (assoc-in
+                            [:formats "application/json" :decoder-opts]
+                            {:decode-key-fn csk/->kebab-case-keyword})
+                          (m/create))}
    :expand (registry-expand r/handlers)})
 
 (def app

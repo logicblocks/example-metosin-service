@@ -34,4 +34,9 @@
       (testing "includes a link to discovery"
         (let [discovery-link (hal/get-href resource :ping)]
           (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/ping")))))))
+          (is (ends-with? discovery-link "/ping"))))
+
+      (testing "includes a link to users"
+        (let [discovery-link (hal/get-href resource :users)]
+          (is (absolute? discovery-link))
+          (is (ends-with? discovery-link "/users")))))))

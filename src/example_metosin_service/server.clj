@@ -1,23 +1,30 @@
 (ns example-metosin-service.server
   (:require
-    [aleph.http :as http]
-    [camel-snake-kebab.core :as csk]
-    [muuntaja.core :as m]
-    [reitit.ring :as ring]
-    [reitit.ring.middleware.muuntaja :as muuntaja-middleware]
-    [ring.middleware.defaults :as defaults]
+   [aleph.http :as http]
+   [muuntaja.core :as m]
+   [reitit.core :as reitit]
+   [reitit.ring :as ring]
+   [reitit.ring.middleware.muuntaja :as muuntaja-middleware]
+   [ring.middleware.defaults :as defaults]
 
-    [example-metosin-service.routes :as r]))
+   [example-metosin-service.routes :as r]))
+
+(defn registry-expand [registry]
+  (fn [data opts]
+    (if (keyword? data)
+      (some-> data
+        registry
+        (reitit/expand opts)
+        (assoc :name data))
+      (reitit/expand data opts))))
 
 (def ring-opts
-  {:data {:middleware [[defaults/wrap-defaults defaults/api-defaults]
-                       muuntaja-middleware/format-negotiate-middleware
-                       muuntaja-middleware/format-response-middleware
-                       muuntaja-middleware/format-request-middleware]
-          :muuntaja   (m/create
-                        (assoc-in m/default-options
-                                  [:formats "application/json" :encoder-opts]
-                                  {:encode-key-fn csk/->camelCaseString}))}})
+  {:data   {:middleware [[defaults/wrap-defaults defaults/api-defaults]
+                         muuntaja-middleware/format-negotiate-middleware
+                         muuntaja-middleware/format-response-middleware
+                         muuntaja-middleware/format-request-middleware]
+            :muuntaja   m/instance}
+   :expand (registry-expand r/handlers)})
 
 (def app
   (ring/ring-handler

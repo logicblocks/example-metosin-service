@@ -5,7 +5,9 @@
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [aleph "0.4.7-alpha5"]
+                 [b-social/hype "1.0.0"]
                  [camel-snake-kebab "0.4.2"]
+                 [halboy "5.1.1"]
                  [metosin/reitit "0.5.12"]
                  [metosin/muuntaja "0.6.8"]
                  [metosin/jsonista "0.3.1"]
@@ -24,7 +26,6 @@
              :uberjar   {:aot          :all
                          :uberjar-name "example-metosin-service.jar"}}
   :test-paths ["test/unit" "test/component"]
-  :eastwood {:config-files ["config/linter.clj"]}
   :cljfmt {:indents ^:replace {#".*" [[:inner 0]]}}
   :aliases {"test" ["do"
                     ["with-profile" "component" "eftest" ":all"]]})

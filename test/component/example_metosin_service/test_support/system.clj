@@ -1,8 +1,8 @@
 (ns example-metosin-service.test-support.system
   (:require
-    [freeport.core :refer [get-free-port!]]
+   [freeport.core :refer [get-free-port!]]
 
-    [example-metosin-service.server :as server]))
+   [example-metosin-service.server :as server]))
 
 (defn test-system-configuration []
   (let [port (get-free-port!)]

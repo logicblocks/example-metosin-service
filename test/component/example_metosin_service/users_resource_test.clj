@@ -35,6 +35,13 @@
           (is (absolute? discovery-link))
           (is (ends-with? discovery-link "/"))))
 
+      (testing "includes a self-link"
+        (let [id (hal/get-property users-resource :id)
+              link (hal/get-href users-resource :self)]
+          (is (absolute? link))
+          (is (ends-with? link id))))
+
       (testing "has given properties"
         (is (= (hal/get-property users-resource :firstName) first-name))
-        (is (= (hal/get-property users-resource :lastName) last-name))))))
+        (is (= (hal/get-property users-resource :lastName) last-name))
+        (is (some? (hal/get-property users-resource :id)))))))

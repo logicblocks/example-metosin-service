@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [aleph "0.4.7-alpha5"]
                  [b-social/hype "1.0.0"]
+                 [danlentz/clj-uuid "0.1.9"]
                  [camel-snake-kebab "0.4.2"]
                  [halboy "5.1.1"]
                  [metosin/reitit "0.5.12"]

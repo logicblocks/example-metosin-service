@@ -10,6 +10,10 @@
 
    [example-metosin-service.routes :as r]))
 
+(defn thingy [thing]
+  (clojure.pprint/pprint thing)
+  thing)
+
 (defn registry-expand [registry]
   (fn [data opts]
     (if (keyword? data)

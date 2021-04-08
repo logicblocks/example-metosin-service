@@ -31,15 +31,14 @@
         (is (= 201 (navigator/status users-result))))
 
       (testing "includes a link to discovery"
-        (let [discovery-link (hal/get-href users-resource :discovery)]
-          (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/"))))
+        (let [link (hal/get-href users-resource :discovery)]
+          (is (absolute? link))
+          (is (ends-with? link "/"))))
 
       (testing "includes a self-link"
-        (let [id (hal/get-property users-resource :id)
-              link (hal/get-href users-resource :self)]
+        (let [link (hal/get-href users-resource :self)]
           (is (absolute? link))
-          (is (ends-with? link id))))
+          (is (ends-with? link "/users"))))
 
       (testing "has given properties"
         (is (= (hal/get-property users-resource :firstName) first-name))

@@ -4,7 +4,8 @@
     [halboy.json :as hal-json]
     [hype.core :as hype]
 
-    [example-metosin-service.users :as users]))
+    [example-metosin-service.users.users :as users]
+    [example-metosin-service.users.mapping :as user-mapping]))
 
 (def successful-defaults {:status  200
                           :headers {"content-type" "application/hal+json"}})
@@ -13,8 +14,6 @@
   [""
    [["/" :discovery]
     ["/ping" :ping]
-    [["/users/" :user-id]
-     [["" :user]]]
     ["/users" :users]
     [true :no-route]]])
 
@@ -40,4 +39,7 @@
    :users     {:post {:handler (fn handler [request]
                                  (assoc successful-defaults
                                    :status 201
-                                   :body (users/create request routes (:body-params request))))}}})
+                                   :body (->>
+                                           (:body-params request)
+                                           (users/create)
+                                           (user-mapping/->user-resource request routes))))}}})

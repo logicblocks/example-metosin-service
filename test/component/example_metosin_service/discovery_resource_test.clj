@@ -22,21 +22,21 @@
         (is (= 200 (navigator/status result))))
 
       (testing "includes a self link"
-        (let [self-link (hal/get-href resource :self)]
-          (is (absolute? self-link))
-          (is (ends-with? self-link "/"))))
+        (let [link (hal/get-href resource :self)]
+          (is (absolute? link))
+          (is (ends-with? link "/"))))
 
       (testing "includes a link to discovery"
-        (let [discovery-link (hal/get-href resource :discovery)]
-          (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/"))))
+        (let [link (hal/get-href resource :discovery)]
+          (is (absolute? link))
+          (is (ends-with? link "/"))))
 
-      (testing "includes a link to discovery"
-        (let [discovery-link (hal/get-href resource :ping)]
-          (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/ping"))))
+      (testing "includes a link to ping"
+        (let [link (hal/get-href resource :ping)]
+          (is (absolute? link))
+          (is (ends-with? link "/ping"))))
 
       (testing "includes a link to users"
-        (let [discovery-link (hal/get-href resource :users)]
-          (is (absolute? discovery-link))
-          (is (ends-with? discovery-link "/users")))))))
+        (let [link (hal/get-href resource :users)]
+          (is (absolute? link))
+          (is (ends-with? link "/users")))))))

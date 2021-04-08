@@ -11,4 +11,6 @@ An example Clojure service using (mostly) [Metosin libraries](https://github.com
 1. Using `hype` for URL generation is possible 
    by modifying the expander function, which allows
    you to define the routes in the bidi-style route
-   structure that `hype` expects
+   structure that `hype` expects. EDIT: more complicated 
+   use cases do not seem possible due to differences in how
+   route parameters are defined

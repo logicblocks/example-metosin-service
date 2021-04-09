@@ -10,9 +10,8 @@
     :refer [test-system-configuration
             with-system-lifecycle]]))
 
-(let [test-system (atom nil)
-      configuration (test-system-configuration)]
-  (use-fixtures :once (with-system-lifecycle test-system configuration))
+(let [configuration (test-system-configuration)]
+  (use-fixtures :once (with-system-lifecycle (:ig-config configuration)))
 
   (deftest discovery-resource-GET-on-success
     (let [base-url (str (:address configuration) "/")

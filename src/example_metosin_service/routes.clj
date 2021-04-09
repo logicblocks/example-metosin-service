@@ -1,11 +1,11 @@
 (ns example-metosin-service.routes
   (:require
-    [halboy.resource :as hal]
-    [halboy.json :as hal-json]
-    [hype.core :as hype]
+   [halboy.resource :as hal]
+   [halboy.json :as hal-json]
+   [hype.core :as hype]
 
-    [example-metosin-service.users.users :as users]
-    [example-metosin-service.users.mapping :as user-mapping]))
+   [example-metosin-service.users.users :as users]
+   [example-metosin-service.users.mapping :as user-mapping]))
 
 (def successful-defaults {:status  200
                           :headers {"content-type" "application/hal+json"}})
@@ -17,7 +17,7 @@
     ["/users" :users]
     [true :no-route]]])
 
-(def handlers
+(defn handlers [dependencies]
   {:discovery {:get {:handler (fn handler [request]
                                 (assoc successful-defaults
                                   :body (->
@@ -41,5 +41,5 @@
                                    :status 201
                                    :body (->>
                                            (:body-params request)
-                                           (users/create)
+                                           (users/create (:crux dependencies))
                                            (user-mapping/->user-resource request routes))))}}})

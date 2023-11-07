@@ -105,7 +105,7 @@ end
 
 RakeCircleCI.define_project_tasks(
   namespace: :circle_ci,
-  project_slug: 'github/logicblocks/example-service'
+  project_slug: 'github/logicblocks/example-metosin-service'
 ) do |t|
   circle_ci_config =
     YAML.load_file('config/secrets/circle_ci/config.yaml')

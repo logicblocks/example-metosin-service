@@ -1,0 +1,110 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.8.3
+
+ruby_container: &ruby_container
+  docker:
+    - image: ruby:3.1.1
+
+slack_context: &slack_context
+  context:
+    - slack
+
+only_dependabot: &only_dependabot
+  filters:
+    branches:
+      only:
+        - /^dependabot.*/
+
+only_main_and_dependabot: &only_main_and_dependabot
+  filters:
+    branches:
+      only:
+        - main
+        - /^dependabot.*/
+
+commands:
+  notify:
+    steps:
+      - when:
+          condition:
+            matches:
+              pattern: "^dependabot.*"
+              value: << pipeline.git.branch >>
+          steps:
+            - slack/notify:
+                event: fail
+                channel: builds-dependabot
+                template: SLACK_FAILURE_NOTIFICATION
+            - slack/notify:
+                event: pass
+                channel: builds-dependabot
+                template: SLACK_SUCCESS_NOTIFICATION
+      - when:
+          condition:
+            matches:
+              pattern: "^(?!dependabot).*"
+              value: << pipeline.git.branch >>
+          steps:
+            - slack/notify:
+                event: fail
+                channel: dev
+                template: SLACK_FAILURE_NOTIFICATION
+            - slack/notify:
+                event: pass
+                channel: builds
+                template: SLACK_SUCCESS_NOTIFICATION
+  configure_build_tools:
+    steps:
+      - run: ./scripts/ci/common/install-openjdk.sh
+  configure_secrets_tools:
+    steps:
+      - run: ./scripts/ci/common/upgrade-gpg.sh
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+
+jobs:
+  build:
+    <<: *ruby_container
+    steps:
+      - checkout
+      - configure_build_tools
+      - run: ./scripts/ci/steps/build.sh
+      - notify
+
+  test:
+    <<: *ruby_container
+    working_directory: ~/source
+    steps:
+      - checkout
+      - configure_build_tools
+      - run: ./scripts/ci/steps/test.sh
+      - notify
+
+  merge_pull_request:
+    <<: *ruby_container
+    steps:
+      - checkout
+      - configure_build_tools
+      - configure_secrets_tools
+      - run: ./scripts/ci/steps/merge-pull-request.sh
+      - notify
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - build:
+          <<: *only_main_and_dependabot
+          <<: *slack_context
+      - test:
+          <<: *only_main_and_dependabot
+          <<: *slack_context
+          requires:
+            - build
+      - merge_pull_request:
+          <<: *only_dependabot
+          <<: *slack_context
+          requires:
+            - test

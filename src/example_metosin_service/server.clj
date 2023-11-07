@@ -22,16 +22,20 @@
       (reitit/expand data opts))))
 
 (defn ring-opts [crux]
-  {:data   {:middleware [[defaults/wrap-defaults defaults/api-defaults]
-                         muuntaja-middleware/format-negotiate-middleware
-                         muuntaja-middleware/format-response-middleware
-                         muuntaja-middleware/format-request-middleware]
-            :muuntaja   (-> m/default-options
-                          (assoc-in
-                            [:formats "application/json" :decoder-opts]
-                            {:decode-key-fn csk/->kebab-case-keyword})
-                          (m/create))}
-   :expand (registry-expand (r/handlers {:crux crux}))})
+  {:data
+   {:middleware
+    [[defaults/wrap-defaults defaults/api-defaults]
+     muuntaja-middleware/format-negotiate-middleware
+     muuntaja-middleware/format-response-middleware
+     muuntaja-middleware/format-request-middleware]
+    :muuntaja
+    (-> m/default-options
+      (assoc-in
+        [:formats "application/json" :decoder-opts]
+        {:decode-key-fn csk/->kebab-case-keyword})
+      (m/create))}
+   :expand
+   (registry-expand (r/handlers {:crux crux}))})
 
 (defmethod ig/init-key :service/app [_ {:keys [crux]}]
   (ring/ring-handler

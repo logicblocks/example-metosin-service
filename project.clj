@@ -1,8 +1,13 @@
-(defproject example-metosin-service "0.1.0-SNAPSHOT"
+(def version
+  (or (System/getenv "VERSION")
+    "0.0.0+LOCAL"))
+
+(defproject example-metosin-service version
   :description "An example Clojure service using Metosin libraries"
-  :url "http://example.com/FIXME"
-  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
-            :url  "https://www.eclipse.org/legal/epl-2.0/"}
+  :url "https://github.com/logicblocks/example-metosin-service"
+
+  :license "MIT License"
+
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [aleph "0.4.7-alpha5"]
                  [b-social/hype "1.0.0"]
@@ -15,9 +20,13 @@
                  [metosin/muuntaja "0.6.8"]
                  [metosin/jsonista "0.3.1"]
                  [ring/ring-defaults "0.3.2"]]
-  :plugins [[jonase/eastwood "0.4.0"]
-            [lein-eftest "0.5.9"]
-            [lein-cljfmt "0.7.0"]]
+  :plugins [[lein-eftest "0.5.9"]
+            [lein-ancient "0.6.15"]
+            [lein-kibit "0.1.6"]
+            [lein-cljfmt "0.6.7"]
+            [lein-bikeshed "0.5.1"]
+            [jonase/eastwood "0.3.3"]
+            [venantius/yagni "0.1.6"]]
   :profiles {:shared    {:dependencies
                          [[ring/ring-mock "0.4.0"]
                           [freeport "1.0.0"]

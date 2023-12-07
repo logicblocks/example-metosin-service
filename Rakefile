@@ -4,6 +4,7 @@ require 'confidante'
 require 'rake_circle_ci'
 require 'rake_git'
 require 'rake_git_crypt'
+require 'rake_github'
 require 'rake_gpg'
 require 'rake_leiningen'
 require 'rake_ssh'
@@ -116,6 +117,16 @@ RakeCircleCI.define_project_tasks(
       File.read('config/secrets/ci/encryption.passphrase')
         .chomp
   }
+end
+
+RakeGithub.define_repository_tasks(
+  namespace: :github,
+  repository: 'logicblocks/example-metosin-service'
+) do |t|
+  github_config =
+    YAML.load_file('config/secrets/github/config.yaml')
+
+  t.access_token = github_config['github_personal_access_token']
 end
 
 namespace :pipeline do
